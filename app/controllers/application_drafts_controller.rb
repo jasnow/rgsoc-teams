@@ -8,7 +8,7 @@ class ApplicationDraftsController < ApplicationController
   helper_method :application_draft
 
   def index
-    @application_drafts = current_user.application_drafts.order('created_at DESC')
+    @application_drafts = current_user.application_drafts.order('position ASC')
   end
 
   def new
@@ -50,6 +50,11 @@ class ApplicationDraftsController < ApplicationController
     render :new
   end
 
+  def prioritize
+    application_draft.insert_at(1)
+    redirect_to application_drafts_url
+  end
+
   protected
 
   def application_draft
@@ -63,7 +68,7 @@ class ApplicationDraftsController < ApplicationController
   def application_draft_params
     if application_draft.as_student?
       params.require(:application_draft).
-        permit(:project_name, :project_url, :misc_info, :heard_about_it, :voluntary, :voluntary_hours_per_week)
+        permit(:project_name, :project_url, :project_plan, :misc_info, :heard_about_it, :voluntary, :voluntary_hours_per_week)
     elsif application_draft.as_coach?
       params.require(:application_draft).
         permit(:coaches_contact_info, :coaches_hours_per_week, :coaches_why_team_successful)
