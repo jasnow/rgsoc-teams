@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150406123511) do
+ActiveRecord::Schema.define(version: 20150409231057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,12 +58,9 @@ ActiveRecord::Schema.define(version: 20150406123511) do
   add_index "application_drafts", ["team_id"], name: "index_application_drafts_on_team_id", using: :btree
 
   create_table "applications", force: true do |t|
-    t.string   "name"
-    t.string   "email"
     t.hstore   "application_data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id"
     t.string   "gender_identification_student"
     t.string   "gender_identification_pair"
     t.text     "misc_info"
@@ -78,8 +75,11 @@ ActiveRecord::Schema.define(version: 20150406123511) do
     t.integer  "form_application_id"
     t.integer  "season_id"
     t.integer  "team_id"
+    t.integer  "application_draft_id"
+    t.json     "team_snapshot"
   end
 
+  add_index "applications", ["application_draft_id"], name: "index_applications_on_application_draft_id", using: :btree
   add_index "applications", ["season_id"], name: "index_applications_on_season_id", using: :btree
   add_index "applications", ["team_id"], name: "index_applications_on_team_id", using: :btree
 
@@ -252,8 +252,8 @@ ActiveRecord::Schema.define(version: 20150406123511) do
     t.string   "country"
     t.boolean  "application_voluntary"
     t.integer  "application_coding_level"
-    t.string   "application_gender_identification"
-    t.string   "application_learning_period"
+    t.text     "application_gender_identification"
+    t.text     "application_learning_period"
     t.text     "application_minimum_money"
     t.text     "application_about"
     t.text     "application_code_samples"
